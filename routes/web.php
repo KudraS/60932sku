@@ -23,6 +23,18 @@ Route::get('/categories/{id}', [CategoryController::class, 'show'])
     ->whereNumber('id');
 
 Route::get('/dishes', [DishController::class, 'index']);
+Route::get('/dishes/create', [DishController::class, 'create']);
+Route::post('/dishes', [DishController::class, 'store']);
+
+Route::get('/dishes/{id}/edit', [DishController::class, 'edit'])
+    ->whereNumber('id');
+
+Route::put('/dishes/{id}', [DishController::class, 'update'])
+    ->whereNumber('id');
+
+Route::delete('/dishes/{id}', [DishController::class, 'destroy'])
+    ->whereNumber('id');
+
 Route::get('/dishes/{id}', [DishController::class, 'show'])
     ->whereNumber('id');
 

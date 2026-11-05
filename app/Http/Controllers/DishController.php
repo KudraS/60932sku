@@ -8,10 +8,19 @@ use Illuminate\Http\Request;
 
 class DishController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $validated = $request->validate([
+            'perpage' => ['sometimes', 'integer', 'in:2,5,10,15'],
+        ]);
+
+        $perPage = (int) ($validated['perpage'] ?? 2);
+
         return view('dishes.index', [
-            'dishes' => Dish::with('category')->orderBy('id')->get(),
+            'dishes' => Dish::with('category')
+                ->orderBy('id')
+                ->paginate($perPage)
+                ->withQueryString(),
         ]);
     }
 

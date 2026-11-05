@@ -65,5 +65,6 @@
             </tr>
         @endforelse
     </table>
+    {{ $dishes->links('vendor.pagination.default') }}
 </body>
 </html>

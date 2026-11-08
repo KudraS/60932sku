@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use App\Models\Dish;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class DishController extends Controller
 {
@@ -56,6 +57,10 @@ class DishController extends Controller
 
     public function edit(string $id)
     {
+        if (Gate::denies('edit-dish')) {
+            abort(403, 'Редактировать блюда может только администратор.');
+        }
+
         return view('dishes.edit', [
             'dish' => Dish::findOrFail($id),
             'categories' => Category::orderBy('name')->get(),
@@ -64,6 +69,10 @@ class DishController extends Controller
 
     public function update(Request $request, string $id)
     {
+        if (Gate::denies('edit-dish')) {
+            abort(403, 'Редактировать блюда может только администратор.');
+        }
+
         $dish = Dish::findOrFail($id);
         $validated = $this->validateDish($request);
 
@@ -79,6 +88,10 @@ class DishController extends Controller
 
     public function destroy(string $id)
     {
+        if (Gate::denies('delete-dish')) {
+            abort(403, 'Удалять блюда может только администратор.');
+        }
+
         $dish = Dish::findOrFail($id);
         $dish->delete();
 

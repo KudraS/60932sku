@@ -1,65 +1,64 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Вход в систему</title>
-</head>
-<body>
-<h1>Вход в систему</h1>
+@extends('layout')
 
-<p><a href="/dishes">Список блюд</a></p>
+@section('title', 'Вход в систему')
 
-@if (session('success'))
-    <p style="color: green">{{ session('success') }}</p>
-@endif
+@section('content')
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    @auth
+                        <h1 class="h4 mb-3">Учётная запись</h1>
+                        <p>Вы вошли как {{ auth()->user()->name }}.</p>
 
-@auth
-    <p>Вы вошли как {{ auth()->user()->name }}.</p>
+                        <form method="POST" action="{{ url('/logout') }}">
+                            @csrf
+                            <button type="submit" class="btn btn-outline-danger">
+                                Выйти
+                            </button>
+                        </form>
+                    @else
+                        <h1 class="h4 mb-3">Вход в систему</h1>
 
-    <form method="POST" action="{{ url('/logout') }}">
-        @csrf
+                        <form method="POST" action="{{ route('login') }}" novalidate>
+                            @csrf
 
-        <button type="submit">Выйти</button>
-    </form>
-@else
-    <form method="POST" action="{{ url('/login') }}" novalidate>
-        @csrf
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Электронная почта</label>
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    class="form-control @error('email') is-invalid @enderror"
+                                    value="{{ old('email') }}"
+                                    autocomplete="username"
+                                    required
+                                >
+                                @error('email')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
 
-        <p>
-            <label for="email">Электронная почта</label><br>
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Пароль</label>
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    class="form-control @error('password') is-invalid @enderror"
+                                    autocomplete="current-password"
+                                    required
+                                >
+                                @error('password')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
 
-            <input
-                type="email"
-                name="email"
-                id="email"
-                value="{{ old('email') }}"
-                autocomplete="username"
-                required
-            >
-
-            @error('email')
-            <br><span style="color: red">{{ $message }}</span>
-            @enderror
-        </p>
-
-        <p>
-            <label for="password">Пароль</label><br>
-
-            <input
-                type="password"
-                name="password"
-                id="password"
-                autocomplete="current-password"
-                required
-            >
-
-            @error('password')
-            <br><span style="color: red">{{ $message }}</span>
-            @enderror
-        </p>
-
-        <button type="submit">Войти</button>
-    </form>
-@endauth
-</body>
-</html>
+                            <button type="submit" class="btn btn-primary">Войти</button>
+                        </form>
+                    @endauth
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
